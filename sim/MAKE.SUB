@@ -1,0 +1,3 @@
+r ../overlays/i22s-1.asm
+asm i22s-1
+mload imp.com=imp245.com,i22s-1.hex

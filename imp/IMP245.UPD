@@ -1,0 +1,49 @@
+
+VERSION EQU	245	; IMP (06/01/87)  -	CP/M-80 MODEM PROGRAM
+;
+;-----------------------------------------------------------------------
+;  o  Added capability to send a break tone.  This is tripped by typing
+;     ESC Q.  (ESC is the 'EXTCHR' character stored at 0114h and can be
+;     changed to another character if preferred.  The 'Q' is stored at
+;     '011Dh and is the 'BRKCHR' in the new overlays dated 01 June 87.
+;
+;  o  Changed routine for sending batch header, constructs the header
+;     BEFORE looking for a 'C' from remote, also uses the conventional
+;     'GTACK' routine, saving bytes.
+;
+;  o  Increased most "RECV" times for PC Pursuit satelite networks, made
+;     the manual abort routine more robust to give additional protection
+;     against inadvertent aborts.
+;
+;  o  Added 'TIG' option to toggle the 'IGNORCTL' option on/off.  Normal
+;     use would leave this in the "only essential CTL-characters will be
+;     received" mode.  If using a remote editor, you may need to receive
+;     all control characters so select the 'TIG' option at that time.  A
+;     menu shows what is in use, by typing 'ESC ?' in the command mode.
+;
+;  o  File name being sent or received is now shown as part of the mes-
+;     displayed during file transfers.
+;
+;  o  If uploading in KMD batch file mode, will now say "File exists,
+;     select another name" if the host system (1) already has a file
+;     with that name and (2) is running KMD22 dated 22 Feb 87 (or newer
+;     if such exists when reading this update).  
+;
+;  o  Goodbye routine significantly changed to insure any incoming char-
+;     acters are stopped if possible before attempting to disconnect the
+;     modem from the phone line.  This routine was placed in the main
+;     program, simplifying the routine in each overlay.
+;
+;  o  Initialization routines in main program changed to insure the line
+;     is onhook when autodialing a phone number.  (A few who use BYE for
+;     their RCPM needed this feature since BYE has an offhook option.
+;     When they selected (any) modem program after using BYE, they could
+;     not get a dial tone without an intentional abort which resets the
+;     modem to onhook.)  This is no longer a problem.
+;
+;  o  Other modest changes, several messages changed slightly.
+;
+;					- Irv Hoff
+;
+;-----------------------------------------------------------------------
+

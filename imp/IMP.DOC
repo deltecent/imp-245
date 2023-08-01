@@ -1,0 +1,904 @@
+
+
+				 IMP
+
+			(NOTES ON HOW TO USE)
+
+			Copyright 1985, 1987
+
+			 Irvin M. Hoff W6FFC
+
+			    01 June 1987
+
+
+
+INTRODUCTION:
+------------
+
+	     NOTE:  THIS PROGRAM SUPPORTS ANY 1200 OR
+		    2400 BPS MODEM INTENDED FOR AUTO-
+		    DIALING WITH THE 'AT' PROTOCOL OR
+		    THE RACAL-VADIC PROTOCOL. IT ALSO
+		    SUPPORTS THE  PROMETHEUS PROMODEM
+		    EXTENDED-'AT' 1200 BPS PROTOCOL.
+
+
+	 NOTE:	IMP v245 adds break capability.  Use ESC Q.
+		It also adds the 'TIG' toggle command to
+		display all incoming control characters if
+		needed for a remote editor.
+
+
+	The IMP modem program enables a computer to communicate with
+another computer.  This is normally done by using standard telephone
+lines but with special audio tones sending serial data.  Three common
+speeds are used, depending on the facilities available -- 300, 1200 or
+2400 bps.  ('bps' stands for bits per second.  One character is 10 bits
+normally.  It may be 11 bits if two stop pulses are used.)
+
+
+WHAT IS A MODEM?
+---------------
+	A "modem" is provides these audio tones.  This is an acronym for
+"modulator and demodulator".  The one section (modulator) provides the
+audio tones for sending over the telephone line and the other section
+(demodulator) then converts those audio tones back to digital pulses the
+computer uses to receive the incoming data.
+
+	The modem itself is a hardware utility, usually costing around
+$50 to $125 for a typical 300 baud device and from $80 to $250 for a
+system offering 1200 bps as well as 300 baud.	The newest modems add
+2400 bps and currently can be obtained from $200 to "way on up".  (The
+so-called "list prices" are rarely paid even with single-unit purchases.)
+
+	Some modems are intended for plugging directly into the computer
+while a vast majority used with CP/M computers are external devices that
+attach to the computer through a serial I/O connector.	These are often
+designed to sit under the phone itself to minimize the space required.
+An external modem has several advantages as most have numerous indicator
+lamps telling the user what is happening.  This also makes it far more
+simple to use the modem on any of several computers the user may have.
+(It also makes it a lot easier to adjust the loudspeaker volume control
+than on an internal unit.)
+
+
+AUTO-STEPDOWN, A NEW MODEM FEATURE
+--------------------------------
+	The newer 300/1200/2400 bps intelligent modems have the ability
+to determine the maximum speed (baudrate) at which the system they are
+calling can use.  They adjust themselves accordingly, without operator
+intervention or knowledge.  They send a "result code" back to the local
+computer telling it what speed they now have.  This information can be
+used to automatically set the local computer to the same speed.  A mes-
+sage is displayed telling the operator what speed he has.
+
+	If the operator has a reason for using less than the maximum
+speed to which another system might respond, he can initially restrict
+the modem from attempting to connect at a faster speed.  Example, Compu-
+serve has modems that will answer at either 1200 or 300 bps.  If reading
+and answering messages "on line in real time" many callers prefer to use
+300 baud (they cannot type even that fast) rather than 1200 bps which is
+nearly twice the cost.	(They also have 2400 bps modems but those are
+frequently on an independent phone line not used for 300 or 1200 bps.)
+
+	IMP takes advantage of this automatic stepdown feature.  It has
+the modem attempt to connect at 2400 bps.  If that is unavailable at the
+answering end, the modem tries for 1200 bps.  When connected, IMP shows
+the speed currently in use and automatically adjusts the local I/O to
+match.	(IMP is the first and currently the only free modem program to
+take advantage of this new modem feature.)
+
+	The operator can easily select the "SET" command should he wish
+to override the automatic "start trying at 2400" and have a specific
+speed dialed (such as 300 baud for Compuserve for hand typing messages
+at lower cost, etc.)  The automatic feature is reinstated by either
+using the "SET" command for 2400, or merely calling up the modem program
+from the disk once more.
+
+	Note: The US Robotics Courier auto-steps from 2400 to 1200 but
+not to 300, as do most of the other new modems with 2400 bps.  This is
+no loss, really, as few people using 2400 would call into a system only
+having 300 bps.
+
+
+PURPOSE
+-------
+     The program discussed in this guide allows each computer involved
+to directly control its own modem, converting DC pulses into audio tones
+which are sent to (or received from) the telephone line.  (The standard
+1200 baud transmissions use "DPSK" (dibit phase shift keying) instead of
+"AFSK" (audio frequency shift keying).
+
+     For short distances, no modems are required as the computer can
+provide the necessary digital voltages.  This discussion is centered
+around systems intended for use over distances ranging from several
+miles to literally around the world.
+
+
+FEATURES:
+--------
+     A program to communicate with another computer can range from very
+simple to very complex.  Although IMP has a number of quite useful fea-
+tures (some of which other modem programs do not currently offer) it is
+one of the easier programs to learn and use.  A list of some of the
+features offered by this particular program include:
+
+  1)  Ability to talk with another computer via keyboard at each end.
+	  (Called the "terminal mode".)
+  2)  Ability to operate a remote mainframe computer such as TYM-SHAR,
+	  or special data bank systems now commonplace.  This includes
+	  "bulletin board" systems for receiving, sending or just read-
+	  ing messges or other types of information.
+  3)  Ability to upload (send) or download (receive) programs from other
+	  computers whether TYM-SHAR, data banks, remote hobby systems
+	  or just another individual in another location.
+  4)  Ability to automatically transfer a group of files (called "batch
+	  mode".  Two popular methods included, KMD batch mode and the
+	  older MODEM7 batch mode.  (Only the KMD type is supported by
+	  RCPM or RAS systems, the MODEM7 batch type can be used when
+	  in contact with another individual that only has the MODEM7
+	  type.)
+  5)  Ability to copy incoming information on a printer.  If the print-
+	  er is too slow to copy the data directly, the extra characters
+	  back into a large storage buffer until they can be printed.
+  6)  Ability to copy incoming data into memory for automatic transfer
+	  to a disk file.
+  7)  Accomodates any computer clock speed up to 25.5 MHz. in 0.1 Mhz.
+	  increments for uniform results.  (The clock speed is actually
+	  of modest interest, it is only used for setting timing loops.)
+  8)  Advanced type of error detection (CRC or Cyclic Redundancy Check)
+	  using automatically generated high-speed lookup tables.
+  9)  Ability to send any of 10 different pre-programmed function keys.
+	  (These keys are very easy to reset, using either of two exter-
+	  programs provided.)  An 11th key is available for log-on use.
+ 11)  Ability to send a 'break tone' to control mainframe reset and for
+	  use with PC Pursuit to disable the '<ret> @ <ret>' disconnect.
+	  This uses ESC Q, can be set otherwise in the overlay.
+ 10)  Automatic disconnect from the telephone line when using ESC N, "D"
+	  or "Z" as an option during file transfer.
+ 11)  Automatic or manual 1k protocol for increased throughput and effi-
+	  ciency over the 128 character blocks long associated with such
+	  programs.  (Effectively gains 10% at 1200 bps and 20% if using
+	  2400 bps.)
+ 12)  Supports 1200 or 2400 bps modems using the Racal-Vadic or 'AT'
+	  protocol developed by Hayes.	These features basically include
+	  automatic dialing and redialing until the system being called
+	  finally answers.
+
+	       a) Automatic selection of a particular phone number from
+		  a library of names and numbers.  (These phone numbers
+		  can be very easily changed by using either of two ex-
+		  ternal programs that are provided.)
+	       b) Automatic dialing for alternate long-distance systems
+		  (where auto-dialing touch-tone modems are used).
+	       c) Entry of a hand-typed number.  Although it might be as
+		  simple to manually dial the number as hand-type it, it
+		  can then be automatically redialed indefinitely.
+	       d) Auto-linking of 1-32 different numbers for continuous
+		  dialing until one of the group is available.
+	       e) Choice of beeping continuously when connected to get
+		  the operator's attention, or beep one time and go to
+		  terminal mode immediately to catch UNIX or IBM signon
+		  messages that assume you can copy when connected.
+	       f) Automatically adjusts the terminal speed to that of
+		  system answering the phone.
+
+
+USING THE PROGRAM THE FIRST TIME:
+--------------------------------
+     For now, we shall assume the program is ready to use on your equip-
+ment.  (Installing the appropriate overlay to achieve this result will
+be discussed later.)
+
+
+	  IMP v245 modem pgm (type M for Menu)
+	  Copyright (c) 1985, 1987 Irvin M. Hoff
+	  Version for Datapoint 1560 modem port 28H
+	  Modem speed is: 2400 bps
+
+	  B>>COMMAND: x
+
+
+	(Your version would look different at line 3 once the
+	appropriate overlay was added and the baudrate might
+	show 1200 if you do not have 2400 bps available.)
+
+
+       The cursor stops at point "x:" waiting for some sort of command.
+Typing a "M" followed immediately by a RETURN, shows the first page of
+a 3-page help guide.
+
+     Several commands are similar to those already used for CP/M, such
+as 'ERA', 'DIR' and the ability to change disk drives and user areas.
+This adds tremendous flexibility while remaining in the modem command
+mode.  To change disk drives, just say:
+
+	  B>>COMMAND: A: <ret>
+
+     and you are in the same user area on the A: drive.  You can also
+     say:
+
+	  A>>COMMAND: A12: <ret>
+
+     to change user areas.  When finished (using this example), say:
+
+	  A12>>COMMAND: CPM  <ret>
+		 or
+	  A12>>COMMAND: BYE  <ret>
+
+     and you will go back to CP/M with the original drive and user area.
+
+
+OPTIONS:
+-------
+     There are 6 primary options and 9 secondary options that may be
+typed on the command line.  In addition there are other numerous commands
+ranging from single character to three characters that can be used (such
+as DIR, ERA, LOG, etc.)  Those are listed on the menu.
+
+     Primary Options:	 E, L, M, R, S, T
+	  E = Echo mode (special type of full duplex)
+	  L = Local modem (no remote echo, half duplex)
+	  M = Menu display showing features that are available
+	  R = Receive a file from remote facility
+	  S = Send a file to a remote facility
+	  T = Terminal mode (full duplex, echo provived remotely)
+
+     Secondary Options:  A, B, D, J, O, Q, R, S, V, X, Z
+	  B = Batch mode -- allows automatic multiple file transfer
+		Most RCPM systems now use KMD in place of the older
+		XMODEM program.  KMD offers YMODEM-type batch mode.
+		This can also simplfy single-file transfers since
+		the filename only needs to be typed at one end.  It
+		also permits using "wildcards" which makes it easier
+		to type filenames.  Batch mode is also useful from
+		modem-to-modem (as when talking to a friend, etc.).
+	  D = Disconnect when done, stay in IMP
+	  K = Manually initiates 1k protocol in send mode
+	  Q = Quiet mode, special purpose feature rarely used except if
+		 operating through a "BYE" program.
+	  R = Receive remote file (8-bit binary)
+	  S = Send file to remote system (8-bit binary)
+	  V = Visual inspection of an ASCII file being transferred.  Not
+		 often used as most ASCII files are now "crunched" for
+		 minimum transfer time and disk space.
+	  X = Inhibits automatic 1k request, transfers 128 char. blocks
+	  Z = Exit to CP/M  when finished, disconnect from phone line
+
+
+     Although you can get the following information from the help guide
+in IMP itself, showing it here will allow us to discuss the various fea-
+tures in somewhat better detail.
+
+
+-   -	-   -	-   -	-   -	-   -	-   -	-   -	-   -	-   -
+
+
+THE HELP GUIDE, PAGE 1:
+----------------------
+
+		  Single Letter Commands
+
+ ?  - Display current settings
+ESC - Function key intercept character, then (0-9)
+ M  - Display the menu
+ E  - Terminal mode with echo
+ L  - Terminal mode with local echo
+ T  - Terminal mode
+^Z  - Clears screen (command mode only)
+ R  - Receive an 8-bit binary CP/M file
+ S  - Send an 8-bit binary CP/M file
+
+	COMMAND: R (or S) FILENAME.TYP
+	R and S can use the following subcommands:
+	   B  - Batch transfer, can use wildcards (e.g., *.*)
+	   D  - Disconnect when done, return to command mode
+	   K  - Manual request for 1k transmissions
+	   Q  - Quiet mode (no messages to console)
+	   V  - View ASCII files on CRT during a file transfer
+	   X  - Inhibits auto 1k request to sender
+	   Z  - When done, disconnect, go to CP/M
+
+	For copying text to disk use T (E or L) FILENAME.TYP
+[more]
+
+
+     (The single letter commands may also be used on the
+     command line when the program is initially executed.)
+
+-   -	-   -	-   -	-   -	-   -	-   -	-   -	-   -	-   -
+
+
+DISCUSSION OF HELP GUIDE PAGE 1:
+-------------------------------
+
+     There are basically three types of commands that may be used with
+this program:
+	     1)  Single-letter commands shown on page one.
+	     2)  Three-letter commands shown on page 2, and
+	     3)  Control-<char.> commands shown on page 3.
+
+     Going down the list:
+
+  ? - shows current parameters.  As these are closely tied in with some
+	  of the other options, we shall show a typical example later
+	  in this discussion.
+ ESC - shows the function key intercept character.  This may be easily
+	  changed by selecting a different character at the 'EXTCHR'
+	  option in the overlay.  (Byte 0114h.)
+
+	  NOTE:  typing ESC <ret> while in the command mode will display
+		 all the programmable function key definitions with the
+		 exception of the log-on string which uses ESC L.
+
+  M - shows the menu a page at a time.	You may abort after any page is
+	  shown, with a CTL-C.
+  E - terminal mode with echo.	When talking with another terminal also
+	  also using IMP (or a comparable program), one of you must send
+	  an 'echo' back so you can both see what the other person is
+	  typing.  This is needed for full-duplex operation.  Usually
+	  the person originating the call will type "E" instead of "T".
+	  However either may do this.  If "both" use the echo mode, the
+	  program usually starts typing a string of feedback characters
+	  since both computers are re-sending the same character over
+	  and over.  You can stop this by just returning to command mode
+	  (type control-E) and then retyping "T" rather than "E".
+  L - terminal mode with local echo.  Shows what you are typing but does
+	  not send an echo of the other person's typing back to him.
+	  Can be used at both ends, in place of one person using "E".
+	  Both "E" and "L" are useful at times for some types of modems
+	  that do not use full-duplex, or for some main frame units that
+	  run half-duplex.  The combination of "T", "E" and "L" gives an
+	  excellent choice to use on various systems.  Normally the "T"
+	  mode is sufficient except when talking with another person and
+	  then the "E" mode at one end or "L" mode at both ends will
+	  provide normal results.  If the remote system does not supply
+	  a LF after a CR, you can get that from the 'TLF' command.
+  T - puts the program directly into "terminal mode", allowing it to
+	  send from the keyboard to the other computer, and to copy any-
+	  thing coming from the other computer with the exception of
+	  file transfers (use "R" to receive those).
+  R - used only for receiving files from the other computer.  These are
+	  usually sent in binary form with either checksum verification
+	  or more commonly, CRC (Cyclic Redundancy Checking).  If ready
+	  to receive another file, you have several choices, depending
+	  on the program used by the other computer.   After notifying
+	  him you are ready (or will be very shortly), you can type:
+
+	       B>>COMMAND: R HELLO.DOC <ret>
+
+	  and when he starts to send, you will receive the program which
+	  then goes directly to the disk.  You could also have said:
+
+	       B>>COMMAND: R <ret>	or   RB <ret>  if you prefer
+
+	  This is called the "Batch mode" and is an extremely useful way
+	  to receive programs automatically, from another computer using
+	  a similar program.  He will use the batch mode for sending the
+	  programs and that automatically provides the file names at the
+	  receiving end.  In this manner, large numbers of programs can
+	  be transferred completely automatically, including full disks.
+	  (Assuming you care to pay the toll calls for the time it will
+	  take!)
+
+	  NOTE:  The method used to receive batch mode would be:
+
+	       B>>COMMAND: R <ret>    (also RB <ret> may be used)
+
+		 since you may not know in advance how many programs he
+		 will be sending.
+
+	       NOTE:  While receiving a file, any errors will be shown
+		      on the console CRT, indicating that portion of the
+		      program, if being repeated.  If the file finishes
+		      transferring normally, it will have been received
+		      error-free.  Those error notices are merely to let
+		      the user know a momentary problem caused a resend.
+		      The error messages indicate phone line quality.
+
+  S - used only to send programs.  Similar to "R" but sends instead of
+	  receives.  If the other system is ready to receive, you could
+	  then type:
+
+	       B>>COMMAND: S HELLO.DOC <ret>
+
+	  It will tell you how many records are involved and how many
+	  minutes and seconds it will take to send the program.  If the
+	  other system is ready to receive, it starts the transfer,
+	  showing how many records have been sent.  If any errors occur
+	  during transmission, it shows what they are and counts them.
+	  It will resend any records not correctly received at the other
+	  computer.  If too many consecutive errors occur (normally set
+	  at 10), the transfer is terminated.  The 'batch mode' may also
+	  be used for sending:
+
+	       B>>COMMAND: SB HELLO.*		 (sending batch mode)
+
+	  will send all files starting with HELLO, or can send just one
+	  file, or can send several non-related files in this manner:
+
+	       B>>COMMAND: SB HELLO.DOC XDIR.COM TERM.*
+
+	  etc.	Be sure to put a space between the various files.  You
+	  can include the 'Z' option:
+
+	       B>>COMMAND: SBZ HELLO.* IMP740.LBR I2LIB.COM
+
+	  When the file transfer is completed it disconnects from the
+	  phone line and reverts to CP/M.  This allows you to be absent
+	  when the file is finished, offering an advantage when sending
+	  lengthy files.
+
+-   -	-   -	-   -	-   -	-   -	-   -	-   -	-   -	-   -
+
+
+THE HELP GUIDE, PAGE 2:
+----------------------
+
+		Three Letter Commands
+
+BYE - Disconnect, then return to CP/M
+CAL - Dial number
+CPM - Exit from this program to CP/M
+DIR - List directory and space free (may specify drive)
+DSC - Disconnect from the phone line
+ERA - Erase file (may specify drive)
+LOG - Change default drive/user no. (specify drive/user)
+      and reset disks.	e.g. LOG A0: or LOG B: (user # unchanged)
+SET - Set modem baud rate
+SPD - Set file output speed in terminal mode
+TBM - Toggle MODEM7/KMD batch mode selection
+TCC - Toggle CRC/Checksum mode on receive
+TIG - Toggle 'ignore CTL character' on/off
+TLF - Toggle LF after CR in "L" or "T" mode for a disk file
+TRB - Toggle rubout to backspace conversion
+
+      The following are terminal text buffer commands:
+
+DEL - Delete memory buffer and file
+WRT - Write memory buffer to disk file
+
+[more]
+
+-   -	-   -	-   -	-   -	-   -	-   -	-   -	-   -	-   -
+
+
+DISCUSSION OF HELP GUIDE, PAGE 2:
+--------------------------------
+
+  BYE - Disconnects the modem from the phone line, closes any file that
+	  may be open and returns to CP/M.
+  CAL - Displays the telephone library.
+
+	 NOTE:	Use the phone number overlay I2NM-2 to easily change the
+		numbers that are stored.  This overlay also accesses up
+		to two alternate long distance dialing systems for the
+		touch-tone auto-dialing modems.  You can also use an ex-
+		ternal program called I2LIB to rapidly change any phone
+		numbers.
+
+  CPM - This returns to normal CP/M use, abandoning IMP.
+
+	  CAUTION: It does not disconnect the modem from
+		   the phone line, which allows intentional
+		   return to CP/M temporarily.
+
+  DIR - Enables the user to see the library of any disk without needing
+	  to return to CP/M first.  Shows the amount of disk spacing
+	  remaining on the logged-in default drive.  (You must log in
+	  any drive you wish to write on, or to see the correct free
+	  disk space remaining.)  See the LOG feature below.
+  DSC - Disconnects the modem from the phone line whenever selected.
+  ERA - Enables the user to erase any files from any disk without the
+	  need to return to CP/M first.  Wild cards (* and ?) accepted.
+  LOG - When a new disk is inserted, you can see the directory and read
+	  files from it but cannot write to it without getting a "BDOS
+	  ERR".  This command allows you to log in a new disk so you can
+	  immediately write on it without first returning to CP/M for a
+	  warm boot.  You can select drive and user number.  (This also
+	  enables DIR to show the correct free disk space remaining.)
+	  You can say:
+			LOG <ret>  for same drive, user area, new disk
+			LOG A
+			LOG A:
+			LOG A14    (user areas are 0-15)
+			LOG A11:
+
+  SET - Allows the user to change baudrates when desired.  If using a
+	  2400 bps modem with automatic stepdown, this would rarely be
+	  used.
+  SPD - Sets the delay between characters and/or delay between lines in
+	  the "T" mode when using ESC F upload a pre-typed file.  Since
+	  most bulletin boards and TYM-SHAR systems normally use line
+	  editors that require a delay after they have received a line,
+	  you can add delay between characters (in increments of 4 ms.)
+	  and/or enter delay between lines (in increments of 100 ms.)
+	  This is preset for most systems at 2 and 200 ms.  They can be
+	  changed at any time.	Current values can be checked by using
+	  the  " ? " command.
+  TBM - Toggle batch mode from KMD (default) to MODEM7.  The primary
+	  difference is the way the file name is sent.	The older MODEM7
+	  method sends each character separately, expecting the other
+	  computer to echo each character.  Checksum is used to verify
+	  the file name.  The KMD method sends a special 128 byte block
+	  with the file name and the length of the file.  This is not
+	  only far better for use with mainframe and networking systems,
+	  but also informs the operator receiving the file how long it
+	  will be.  (The KMD method then automatically goes to 1k mode.)
+	  The chaces are excellent you will never need the MODEM7 type.
+  TCC - Most modem programs originally used simple checksum verification
+	  of received sectors.	Most now use Cyclic Redundancy Checking
+	  which finds certain transmission errors the simple checksum
+	  system might overlook.  This toggle allows the user to select
+	  checksum for those systems known to not offer CRC.  When set
+	  normally to CRC, the program automatically switches to check-
+	  sum after trying several times to use CRC.
+  TIG - Toggles the 'IGNRCTL' flag in the overlay.  This is usually set
+	  to ignore incoming control characters other than those needed,
+	  such as CR, LF, backspace, etc.  This minimizes unwanted char-
+	  acters sometimes received in noisy conditions which can create
+	  undesired effects.  Can be toggled to receive ALL incoming CTL
+	  characters for the occasional use of an editor requiring them.
+  TLF - If sending a file while in terminal mode (via ESC F option) most
+	  mainframe computers will not want you to send a line feed.  As
+	  all editors include the LF after CR, you have the option with
+	  this toggle of sending or not sending a line feed.  If typing
+	  manually in the "T" mode, you can get a line feed with CTL-J.
+	  It is automatically included after CR with "L" or "E" modes.
+  TRB - Allows the rubout char. to be changed to backspace if desired.
+	  Can be set in overlay to default either way you prefer.  Set
+	  to 'backspace' in distributed overlay copies.
+  DEL - If copying incoming information into memory, and you decide you
+	  do not want to bother saving it to disk after all, this closes
+	  (and then deletes) the disk file you had opened.
+  WRT - saves what you have been copying to the disk file already opened
+	  for that purpose.  When returning from the "T" mode to command
+	  mode, a warning is shown that you may lose what has been saved
+	  unless you use WRT (write to disk).
+
+	  NOTE: An open file is automatically written to disk
+		should you use BYE or CPM commands to leave the
+		program.  This prevents accidental loss of data
+		intended to be saved.
+
+
+-   -	-   -	-   -	-   -	-   -	-   -	-   -	-   -	-   -
+
+
+THE HELP GUIDE, PAGE 3:
+----------------------
+
+  Local Commands while in Terminal Mode
+
+  ESC E  - Exit to command mode
+  ESC F  - Send file to remote system
+  ESC L  - Send log-on message
+  ESC N  - Disconnect from the phone line
+  ESC P  - Toggle printer on (or off)
+  ESC Q  - Send break tone
+  ESC Z  - Clears screen, terminal mode
+
+  ESC R  - Stop copy into buffer
+  ESC Y  - Start copy into buffer
+
+		Start & Stop may be toggled as often as desired.
+		A ";" at start of line indicates buffer is copying.
+		X-off automatically used to stop input when writing
+		   full buffer to disk, X-on sent to resume.
+
+
+  >>COMMAND:
+
+-   -	-   -	-   -	-   -	-   -	-   -	-   -	-   -	-   -
+
+
+DISCUSSION OF HELP GUIDE, PAGE 3:
+--------------------------------
+
+  ESC E  - Returns to command modem from "T", "L", "E" modes.
+  ESC F  - Sends an ASCII file to the remote terminal, X-on and X-off
+	     automatically used.  Optional delays available.
+  ESC L  - Will send the log-on message if one has been included in the
+	     LOGON area of the overlay.  (This is intended only to send
+	     a phrase of ASCII characters, not intended as a substitute
+	     for "script" commands.)
+  ESC N  - Disconnect the modem from the phone line.
+	     (You can easily change this to whatever you like in the
+	     overlay you use for your equipment.)
+  ESC Q  - Sends a 300 ms. break tone.	Sometimes required by mainframe
+	     computers to reset.  Used by PC Pursuit to disable the
+	     '<ret> @ <ret>' disconnect command, etc.
+  ESC P  - Toggles the printer on-off.	Very useful feature.  Similar to
+	     normal control-P but in this case if the modem is running
+	     faster than normal printer speed, the characters just back
+	     into a special buffer while the printer tries to catch up.
+	     Especially beneficial when using 2400 bps as few printers
+	     can keep up at that speed.  Can be toggled at any time you
+	     are in the "T", "L" or "E" modes.	Often used to copy items
+	     from bulletin boards, etc. that are not worth permanently
+	     saving on disk.
+
+		 Note:	Some computers, such as the Commodore
+			Commodore C128 cannot use the printer
+			and the modem at the same time.
+
+  ESC Z  - Clears the screen in terminal mode.	(CTL-Z normally used but
+	     that goes on out the terminal to the remote system.)
+  ESC Y  - Used only in terminal mode.	If ESC R is used to temporarily
+	     stop copying incoming text to memory, ESC Y restarts this
+	     feature.  When copying to memory, a ';' appears in the
+	     first column of each line.
+
+	   NOTE:  To open a file use:  COMMAND: T FILENAME.EXT <ret> and
+		  then ESC R and ESC Y will control what is copied for
+		  saving to disk.
+
+  ESC R  - Stops the copy into memory, shuts off the ";" at start of
+	     each line.  These two commands (ESC Y to start, and ESC R
+	     to stop) control what is being saved.  When returning to
+	     command (via ESC E), you will then be warned to save the
+	     information to disk via the WRT command or it will likely
+	     be lost.  (You may never use ESC R or ESC Y and just use
+	     your editor on that file later to discard unwated magerial.
+
+
+-   -	-   -	-   -	-   -	-   -	-   -	-   -	-   -	-   -
+
+
+AUTO-DIALING AND AUTO-REDIALING:
+----------------------------------------------------------------
+
+     There are several ways to auto-dial.
+
+	  1) from the command line
+	  2) from the phone number library line
+
+     In addition you can auto-redial from either of these lines.  Once
+the number has auto-dialed and there is no answer, it will ask you if
+you want it to continuously auto-redial until it does receive an answer
+(or you decide to abort).
+
+     To get the phone library, type CAL <ret> on the command line.  You
+then normally just type the appropriate character at the start of the
+line.  It will show the number being dialed.  You can also do this from
+the main command line if you know in advance what character is used for
+that particular number:
+
+	       B>>COMMAND: CAL P <ret>
+
+     This calls up the "P" line in the library and dials that number,
+then if busy asks if you want it to continue redialing.  You can use:
+
+	       B>>COMMAND: CAL 313-749-6569 <ret>
+
+     and it will dial the number specified.  You can then do either of
+these on the library command line, as well.  This gives a tremendous
+versatility.
+
+NOTE:	To access the alternate long distance dialing systems (up to two
+	are offered), use the phone number overlay and fill in the in-
+	formation regarding your access number, billing number, etc.  It
+	will then show how to enter a special character ahead of each
+	phone number where alternate long distance system is desired.
+	This only works where touch-tone systems are in use.
+
+
+-   -	-   -	-   -	-   -	-   -	-   -	-   -	-   -	-   -
+
+AUTO-LINKING PHONE NUMBERS:
+--------------------------
+
+     If the number you want to dial is busy, you would like to have it
+automatically redialed until it answers.  However, you might like to
+call any of a group of numbers and be happy to take whichever one first
+becomes available.  Auto-linking allows a group of numbers to be listed
+and they are then continuously dialed one after the other, until one is
+available.
+
+     IMP permits from 1-32 numbers to be linked together in any manner.
+There are two options:
+
+	   B>>COMMAND: CAL A,D,R,3,Z	     1)
+	   B>>COMMAND: CAL F,		     2)
+
+	   B>>COMMAND: CAL A/D/R/3/Z	     3)
+	   B>>COMMAND: CAL F/		     4)
+
+	   B>>COMMAND: CAL A,D,A,R,A,3,A,Z   5)
+
+	   B>>COMMAND: CAL F		     6)
+
+
+	1) using a comma (,) will beep continuously when connected to
+	   the first available number - touching any key stops the beep
+	   and goes to terminal mode.
+
+	2) just the one number is linked to itself and redials until
+	   connected.  Beeps continuously until stopped with any key.
+
+	3) using a slash (/) will beep only once when connected and then
+	   automatically go directly to terminal mode - this is useful
+	   where some mainframes such as IBM and UNIX send a logon note
+	   assuming you are already able to copy as soon as connected.
+
+	4) just the one number is linked to itself and redials until
+	   connected.  Beeps only once and goes to terminal mode.
+
+	5) illustrates how one number can be given top priority.
+
+	6) system used previously - if connected on first try, beeps one
+	   time and jumps directly to terminal mode.  If no connection,
+	   asks the operator if he wants to try again or try continuous-
+	   ly until a connected is made - at which time it beeps until a
+	   key is depressed.
+
+-   -	-   -	-   -	-   -	-   -	-   -	-   -	-   -	-   -
+
+
+CASCADING COMMANDS:
+------------------
+
+     Several commands may be used on the same line.  Ones normally used
+are:  B, D, E, K, L, Q, R, S, T, V, X and Z
+
+     The commands have been listed previously but will be listed here
+again:
+
+	B) batch mode  (must be used at both ends if used at all)
+		(usually only available modem-to-modem with operators
+		present at each end.)
+	D) disconnets the phone, returns to CP/M after a file transfer
+	E) echo mode for conversing with a system not offering echo.
+	K) used to manually request 1k transmissions on systems not
+		having automatic 1k transmissions.
+	L) local echo shows what you are sending if no remote echo.
+	Q) quiet mode, suppresses messages on local console.
+	R) receive file transfers (8-bit binary)
+	S) send file transfers, also shows transfer time.
+	T) terminal mode - operates computer at other end like a remote
+	      terminal.  Also stands for "text mode".  When in "T" mode
+	      you can copy incoming to printer or to disk, and send pre-
+	      typed ASCII text files via ESC F.
+	V) visual -- lets you see incoming ASCII files while being sent
+		to the disk system.
+	X) inhibits automatic request for 1k transmissions
+	Z) disconnects the phone, returns to command mode after a file
+		tranfer.
+
+-   -	-   -	-   -	-   -	-   -	-   -	-   -	-   -	-   -
+
+
+TYPICAL PARAMETERS SHOWN BY THE "?" COMMAND:
+-------------------------------------------
+
+B>>COMMAND: ? <ret>
+
+Mode: CRC
+KMD batch mode
+Rub is backspace
+Printer buffer is OFF
+Modem speed is: 1200 bps
+Incoming control characters received
+Terminal mode file buffer is inactive
+Unused portion of buffer is 16384 bytes
+Use ESC before local command in terminal mode
+XOFF testing used in terminal mode file output
+LF NOT sent after CR in "L" or "T" for a disk file
+
+Char. delay (terminal file mode) is:   2 ms. per character
+Line  delay (terminal file mode) is: 200 ms. per character
+
+-   -	-   -	-   -	-   -	-   -	-   -	-   -	-   -	-   -
+
+
+DISCUSSION OF TYPICAL PARMETERS SHOWN BY THE "?" COMMAND:
+--------------------------------------------------------
+
+     By this time, most of these parameters are self-explanatory.  They
+primarily show how the options and toggles have been set.  The user can
+check on any of the major parameters at any time by:
+
+	  1) Typing ESC E to return to COMMAND: mode and
+	  2) Typing  ?	to see the list of current parameters.
+
+-   -	-   -	-   -	-   -	-   -	-   -	-   -	-   -	-   -
+
+
+FUNCTION KEYS:
+-------------
+
+     There are 10 function keys which may be easily programmed with an
+external file called I2FUNC.COM in just a few moments.	It makes the
+changes directly to the IMP.COM file.  (There is an additional ESC L
+log-on selection that is programmable in your overlay.)
+
+     To view the contents of the function keys, type 'M' for menu while
+on the command line and it will show the character currently used for
+the function key intercept.  (It will be ESC unless you select another.)
+You could then type that character (followed by <ret>) on the command
+line and it will display the entire contents of the function keys.
+
+	 NOTE:	ESC L gives the string of characters set
+		into the 'LOGON:' area of the overlay.
+		This can be used for a variety of uses.
+		You can readily program that for whatever
+		purpose you wish.
+
+-   -	-   -	-   -	-   -	-   -	-   -	-   -	-   -	-   -
+
+
+CHANGING THE PHONE NUMBER LIBRARY:
+---------------------------------
+
+     The phone numbers in the library may be easily changed using an
+external file called I2LIB.COM.  This permits any of the 36 phone num-
+bers to be changed in only a few seconds.  It works directly on the
+IMP.COM file.  If extensive changes are to be made, you may prefer
+to use an overlay file called I2NM-2.ASM.  This permits using your
+editor to make quick and selective changes, or to substitute an entire
+new library.  (You may need to add or remove things like '1-' for long
+distance dialing in your area.)  That file also is used to set the
+alternate long-distance dialing routines for SPRINT, MCI, TYMNET, etc.
+It can also be used for changing the function key assignments.	(You
+can even imbed control characters into function key assignments using
+the I2NM-2.ASM file.)
+
+-   -	-   -	-   -	-   -	-   -	-   -	-   -	-   -	-   -
+
+RETRY OPTION:
+------------
+
+     The consecutive error limit has been set to 10.  When transferring
+files, if this limit is reached, the file transfer will be aborted.
+
+-   -	-   -	-   -	-   -	-   -	-   -	-   -	-   -	-   -
+
+
+INSTALLING THE PROGRAM:
+----------------------
+
+     Although this is obviously the very first thing that needs to be
+done, it was saved until last for several reasons.  The most important
+of these was the need to first explain what some of the options would
+do when selected.
+
+     By this time the user should have a fairly good idea what options
+would work best for him.  When looking at the beginning of the program
+where the these are selected, it should now be rather easy to pick the
+ones that might need to be changed for a particular preference.  You may
+be using a 2400 bps modem and find the overlay was set for 1200, etc.
+
+     There are various ways to change the program to suit a specific
+user.  You are offered several methods.  The "easy way" is to get the
+IMP.COM file plus the appropriate overlay for your computer.  You then
+edit the overlay (if needed) to suit your local needs, assemble it to
+get a .HEX file then use the simple instruction and MLOAD.COM to combine
+the standard IMP.COM file with your overlay.  The front end of each
+overlay contains all the information on how to accomlish this.
+
+     Generally no changes need to be made in specific overlays unless
+you have some particular requirement different from others using the
+same equipment.  (Such as the log-on message, for example.)
+
+     You can also use DDT to change specific bytes without editing and
+assembling.
+
+NOTE:	Although designed with special emphasis on the auto-
+	dialing and redialing capability of 1200 or 2400 bps
+	modems using the Racal-Vadic or Hayes 'AT' protocol,
+	the program may be used with other modems where the
+	operator manually dials the number, then changes to
+	terminal mode after connecting his modem.
+
+
+SUMMARY
+-------
+
+     We hope this verstile program will give you hours of enjoyment and
+fulfill your modem needs.  It is particularly useful with the 2400 bps
+modems that have automatic stepdown.
+
+					- Irv Hoff W6FFC
+					  (415) 948-2513 PRACSA RCPM
+					  (415) 948-2166 voice
+

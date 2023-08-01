@@ -1,0 +1,43 @@
+SUBJECT : Disk dumps with IMP
+
+FROM	: Irv Hoff
+
+DATE	: 01 June 87
+
+
+
+	The distribution copy of IMP sets the file transfer disk buffer
+to 16k.  This is one "file extent" in length.  (MODEM7 used to dump
+every 2k, MDM7 every 16k.)  Minimizing the number of disk dumps helps
+to increase the efficiency of a file transfer.
+
+	Should you notice an error frequently occurs every 128 records,
+it is likely caused by your small floppy disk taking over 10 seconds to
+dump 16k to disk.
+
+	The solution is simple.  Change byte 0BFF from 80H (128 decimal
+for 16k) to perhaps 40H (64 decimal for 8k).  This byte is easy to re-
+member as it is one less than 0C00, where the telephone library starts.
+It was placed at this position just so it could be easily found.
+
+	You can also use the I2NM-2.ASM telephone overlay and change the
+label XFRSIZ from 16 to 8.  Then use MLOAD.COM to merge that overlay
+onto the main program.	This may be easier for you than using DDT.
+
+	Since only a few people have this problem it seemed better to
+tell them, rather than penalize those with faster disk system by making
+it 8k for everybody.  (The name of the game is to minimize delays - this
+is the main reason for adding 1k block sizes, going to 2400 bps modems,
+etc.)
+
+ 	 NOTE:  The 1571 disk system used with the
+		Commodore C128 is exceptionally slow.
+		The I2C8-x.ASM overlay for this com-
+		puter has an option included to set
+		the disk dumps to 4k.
+
+					- Irv Hoff
+					  Los Altos Hills, CA
+					  (415) 948-2513 PRACSA RCPM
+					  (415) 948-2166 voice
+

@@ -1,0 +1,337 @@
+SUBJECT :  New IMP features
+
+FROM	:  Irv Hoff
+
+DATE	:  01 June 87
+
+
+
+		IMP was the first program known to
+		utilize the automatic stepdown feature
+		offered by new 2400 bps modems.  It
+		also It also was the first (and with
+		TERM3, a commercial program) the only
+		program that has automatic 1k protocol
+		for faster file transfers at either
+		1200 or 2400 bps.  All KMD pgms as well
+		as XMODEM 112 and later support auto-
+		matic 1k protocol.  Both KMD/YMODEM and
+		MODEM7 types of batch mode are offered.
+
+
+INTRODUCTION
+------------
+	This is a partial list of some of the features offered by IMP.
+It was developed for the new 2400 bps modems, but also fully supports
+older 300/1200 bps modems that use either the Racal-Vadic or the 'AT'
+protocol developed by Hayes.  IMP also supports the extended Prometheus
+protocol for the ProModem 1200.
+
+
+AUTO STEPDOWN
+-------------
+	New modems offer automatic stepdown.  If not familiar with this
+feature, they first attempt to connect at 2400 bps, then at 1200, then
+at 300.  (The US Robotics Courier only steps from 2400 to 1200, this is
+no limitation as few people using a 2400 bps modem would likely call a
+300 bps system on a regular basis.)
+
+	When a connection is made, the modem returns the result code
+at the last speed originally selected (2400 at power up) and then
+switches to match the speed of the other unit.	For instance if calling
+a 1200 bps system, it will give a "5" result code for 1200 bps, but
+at the last speed you used (normally 2400 by default) and then change
+to 1200.
+
+	IMP was the first and is currently one of the few free modem
+programs that utilize this information to automatically set the I/O
+baudrate on the computer to match the modem speed.
+
+	Thus the user can dial any number in his phone library, or even
+a hand-entered number, without knowing (or caring) in advance what speed
+the other system can accomodate.  (He may have just added 2400 bps with
+a new modem you do not even know about.)
+
+	One of the biggest advantages to having automatic setting of the
+computer involves linking several numbers for continuous dialing.  IMP
+allows numbers to be dialed where some are known to use 2400, some 1200
+and perhaps a few even at 300 only.
+
+
+GENERAL IMP FEATURES
+--------------------
+	IMP shows the current modem baudrate quite often.  If for any
+reason you leave the modem program while still online, to check on some
+disk or otherwise use the editor or assembler, etc. quickly, IMP stores
+the current baudrate.  When calling it up again, it resets to that same
+baudrate.  This is not unusual, but other programs that do this require
+the use of the "carrier detect" pin to see if still connected, and just
+ignore any initialization in that case.  IMP never needs carrier detect
+and that pin does not even need to be wired to the computer.
+
+	You can clear the screen at any time, CTL-Z when in command mode
+or ESC-z (or ESC-Z) when in the terminal mode, assuming you retain the
+"ESC" character as the lead-in character for local command.
+
+	Any CTL-character typed while in the terminal mode goes out the
+modem.	(Which is why you need to use ESC-Z to clear the screen, as a
+local command!)  This permits using remote editors such as WordStar.
+(You need to also use ESC-p to control the printer, allowing a CTL-P
+to go out the modem for remote control purposes.)
+
+	In the termianl mode, typing 'ESC Q' will send a break.  This is
+used to reset some mainframe computers and is handy on PC Pursuit for
+use in disabling the '<ret> @ <ret>' disconnect combination that some-
+times causes problems when sending file transfers.  (New for IMP245.)
+
+	In the command mode, typing '? <ret>' shows all the current
+parameters.  Typing an ESC <ret> shows the function key assignements
+(unless the user has selected a different character than ESC for that
+purpose.)  Typing a "M" shows the menu.  (Three pages, total.)
+
+	In the command mode, while dialing a number, a CTL-X aborts
+back to the command mode (as always), but a CTL-K aborts the current
+attempt and starts the next one.  This saves time if you hear a phone
+ring with no answer and don't want to wait until the modem tires of
+trying for a "no answer" (usually takes 30 seconds or more).  At times,
+an older switching office never does seem to place the call, and CTL-K
+expedites another try.	Nice feature, try it 1-2 times to see how it
+works.
+
+	In the terminal mode, when sending a pretyped ASCII file will
+automatically activate the X-off, X-on mode, which the user has to man-
+ually select on many other modem programs.  The delays between characters
+and/or between lines are only take effect after the I/O buffer is empty,
+not after you send a character to the holding buffer in the I/O.  This
+gives substantially more accurate timing delays than those provided by
+most other modem programs.
+
+	IMP has excellent progress reports while autodialing.  It num-
+bers each attempt.  Many older 1200 bps modems (such as the Smartmodem
+Hayes) do not give a result code for busy.  The newer 2400 bps modems
+have such a result code.  IMP uses this to immediately start a redial.
+The Racal-Vadic modems also return a "ring" report for each ring not
+answered.  This is displayed.  Other reports such as "no dial tone",
+"no answer", "failed", etc. are displayed by IMP for those modems with
+extended result codes.
+
+	(IMP has a special byte at 0C00H-2  (0BFEH) which can be easily
+changed with DDT, etc.	This byte delays the time from receiving a busy
+signal until a redial is attempted.  Obviously most people want a redial
+as soon as is convenient.  Having this byte available allows the casual
+user who needs a longer time (he might be going through the company's
+switchboard, etc.) to adjust the delay suitably.  The telephone overlay
+I2NM-2.ASM also includes this byte.)
+
+	IMP also displays the modem speed when a connect is made.  With
+the automatic stepdown units, that is normally the only way you would
+find out, unless you started a file transfer where it could display the
+time it would take at the current modem speed.
+
+	You can select a new baudrate on the command line now.	If you
+select an improper number it will display those availble and wait for a
+correct response.  This opens the avenue for customization by asking for
+"SET <ret>".
+
+	Unless you do select a new speed manually via the SET command,
+the modem thinks you want to accept the fastest speed it finds available.
+You may prefer a slower speed.	Just use SET 300, for example and this
+limits the modem to connecting at that speed.  Using SET 2400 resets to
+fully automatic operation once more.  (You may want to call Compuserve,
+for example, where you cannot type even 300 bps to answer messages and
+1200 bps would be far more expensive.)
+
+	None of the currently available or planned overlays require any
+specific information buried in the main program.  Thus any subsequent
+release should support any of those overlays.
+
+	IMP turns off the auto-answer feature whenever a number has been
+dialed, using DSC to disconnect or BYE to leave the program.  This in-
+sures the modem will not try to answer the phone the next time it rings.
+Some modems such as the Robotics Courier 2400 and Hayes 1200 Smartmodem
+have manual switches that can be set for autoanswer.  Most users disable
+those switches, so the phone can be used in a normal manner.
+
+
+1k PROTOCOL
+-----------
+	At the faster baudrate, the efficiency drops rapidly with the
+older XMODEM programs that can only send 128 characters per block.  They
+wait for an answer of "ACK" or "NAK" from the receiving station.  By
+sending 8 records (1k) per transmission, these waits are of course re-
+duced to 1/8th normal frequency.  This increases the throughput at 1200
+bps from 48 blocks per minute to the equivalent of 53 blocks per minute.
+This is a gain of about 10% which means less $$$ in transferring files.
+At 2400 bps 85 blocks per minute is normal.  This increases to 102 when
+using the 1k protocol to the equivalent of 102 blocks per minute.  This
+is an increase of 20% throughput.  At 9600, the effect is substantially
+more pronounced.
+
+	Chuck Forsberg has had 1k blocks available for several years
+with his YAM (public domain) and PRO-YAM (commercial program for MS-DOS
+users).  That is a manually operated system where the user has to type
+"SK" at the sending end to initiate the 1k transmissions.  This system
+has the disadvantage of requiring the operator to know why he should
+type "SK", as well as remember he should.
+
+	IMP uses a protocol that requires no operator intervention.  The
+user does not even need to be aware he has such a feature.  He proceeds
+normally and IMP automatically tells the sender it can accept 1k proto-
+ol as well as the older 128 character blocks.  (IMP does support the
+manual protocol used by MEX114, YAM and PRO-YAM if you prefer to type
+"SK", or must - to use one of those modem programs.)
+
+	This is transparent to older XMODEM programs.  Thus IMP works
+normally on either type system - those that offer 1k automatic protocol
+or those that do not.  KMD has offered both the automatic and manual
+protocols since it was introduced in mid-July 1985.
+
+	(If for any reason the operator wishes to disable the automatic
+1k protocol, just type "RX" at the receiving end and it will not inform
+the sending end that it has 1k protocol available.  This forces sending
+128-character blocks.)
+
+	There is little or no advantage to 1k blocks at 300 bps, so IMP
+requires a speed of 1200 bps or greater to activate the 1k protocol.  A
+1k block at 300 bps would take 34 seconds!  (Takes 9 seconds at 1200
+bps and 4.7 seconds at 2400 bps.)
+
+	CRC is required for the 1k protocol.  If the other system only
+has checksum, IMP automatically sends 128 character blocks after setting
+itself to checksum.  (Use 'TCC' when in the command mode to select the
+checksum protocol.  It is automatically selected if sending to another
+system that can only receive checksum.)
+
+
+BATCH MODE WITH 1k
+------------------
+	IMP supports the KMD/YMODEM batch protocol in addition to the
+older MODEM7 type.  They are both operated in the same manner but the
+kMD type offers significant advantages in the way the file name is sent.
+The MODEM7 method sends one character at a time, waiting for an echo
+from the other system, then a checksum verification is made.  This is
+slow and quite unsatisfactory for modern-day use with mainframe or net-
+working systems.  (Both batch types incorporated into IMP use automatic
+1k protocol.)
+
+	The KMD method (compatible with the YMODEM protocol developed by
+Chuck Forsberg use with IBM-PC computer running MS-DOS) has a special
+128-character block for sending the file name.	Additional data can be
+included, such as the file length and time/date stamp.	IMP uses the
+file length feature.  (MODEM7 batch does not support this nice feature.)
+This batch mode also sends and receives 1k automatic protocol, if the
+file is longer than 8 records.
+
+	Each file terminates in 128 character blocks if less than 1k re-
+mains, but the 1k protocol is reinstated for the next file in the group.
+The ratio checking is reset for each file so the accumulated errors are
+more indicative of current conditions.
+
+	Roy Robinson of the Osborne Corp. has used two Vixen computers
+running at 19200 with IMP in the batch mode to transfer the contents of
+entire disks from one machine to the other.  He says it is fascinating
+to watch the results at that speed.  (A null cable was used between the
+two machines which were in the same room.  Normally things like this are
+done with computers of different brands, where it may be difficult to
+make a disk that runs suitably on the other computer.)
+
+	KMD and BYE5 support this KMD-batch mode for normal RCPM use.
+The total time it will take to send all files is computed and displayed.
+(If this exceeds the remaining time available, it aborts the request and
+asking for a different file.)
+
+
+RATIO CHECKING FOR 1k
+---------------------
+	If conditions are poor, any advantage to sending the longer 1k
+blocks would be lost.  The program should check the ratio of good blocks
+copied against the number of repeats that have been needed.  A point is
+reached where staying in the 1k protocol would be detrimental.	This oc-
+curs at 43 records/per hit at 2400 bps and at 71 records per hit at 1200
+bps, where there is less to be gained by using 1k blocks to start with.
+
+	(This is calculated for the time it would take to resend
+	one 1k transmssion due to one hit, versus sending 128
+	character transmissions with one hit, over a modest length
+	connection.  The further the distance, the more delay you
+	get waiting for the "ACK" and the more favorable the ratio
+	becomes with regard to the ones chosen for normal operation.)
+
+	IMP is the only program currently available that attemptes to
+select an individual optimum ratio for the speed being used.  YAM stays
+in 1k protocol, once requested, until the file transfer is finished.
+XMODEM has a ratio check to switch back to 128 character blocks but uses
+a single figure for all speeds.  This could cost extra time and money
+under unfavorable conditions.  It would switch too soon for 2400 bps and
+not soon enough for 1200, to be most economical.
+
+	IMP also changes back to 128 character blocks if 4 or more con-
+secutive hits are encountered.
+
+
+IDEA OF 1k PROTOCOL
+-------------------
+	The name of the game is time spent on the telephone.  This not
+only involves the actual long distance charges but the time the operator
+has to spend in front of the machine.  The following needs little addi-
+tional explanation:
+			     100k file
+
+		    128 char blocks   1k blocks
+
+	     300 baud	61:32		 n/a
+	    1200 bps	16:40		15:06
+	    2400 bps	 9:18		 7:51
+
+	These figures based on modest length calls with direct
+	lines.	The time gained when using satelite calls is
+	far more dramatic.  Jon Saxton in Australia calls the
+	USA via a satelite link and tests indicate an approxi-
+	mate 30% decrease in file transfer time with 1k blocks.
+
+
+	This indicates the entire concept should be fully automatic and
+totally transparent to the user.  (Unless he is technically inclined and
+likes to know about details of this sort.)  If it saves connect time and
+money, the operator should not be required to manually make this choice
+each transmission.  This is particularly beneficial if using PC Pursuit
+where the following is typical:
+
+			PC PURSUIT 1200 bps
+
+		19.2  128 character blocks per minute
+		44.3  1k blocks per minute
+
+	IMP has become quite popular with PC Pursuit users since it auto-
+matically selects 1k blocks for all files 1k or longer.
+
+
+LAST BLOCK
+----------
+	When the file is finished, it is rare it quits on an even 1k.
+IMP automatically switches back to 128 character blocks at this time.
+This gives the same number of records the original program contained
+and subsequent checks using CHEK.COM or will give identical results.
+YAM never switches to 128 character blocks regardless of end of file
+or excessive hits.
+
+
+1k SUMMARY
+----------
+	The success with faster transmissions and less connect time in-
+dicate other modem programs will likely soon follow suit with fully
+transparent programs that can automatically select 1k blocks.  Remember
+manual control of 1k blocks was developed by Chuck Forsberg and first
+appeared with YAM.  The automatic selection and error ratio routines
+were developed by the author and have been incorporated into both KMD
+(the XMODEM replacement) and IMP.
+
+	Currently no MS-DOS program supports automatic 1k protocol.
+IMP and TERM3 (a commercial program) are the only ones known that do.
+
+
+					- Irv Hoff
+					  Los Altos Hills, CA
+					  (415) 948-2513 PRACSA RCPM
+					  (415) 948-2166 voice
+

@@ -1,0 +1,48 @@
+From  : Irv Hoff
+
+Date  : 01 June 87
+
+Topic : IMP and DTR
+
+
+	Nearly all modems permit using an external DTR voltage on the
+RS-232 DB-25 connector pin 20.	This is the method by which the operator
+can intentionally disconnect the modem when finished.  By either shutting
+off that DTR voltage (or momentarily dropping it), the modem disconnects.
+
+	Some computers (such as the Osborne OS-1) do not have this ex-
+ternal voltage without making an internal change to the wiring.  A few
+modems (notably the Anchor Mark XII) do not permit using this external
+voltage.  They do, however, use a software feature that can disconnect
+the modem:  Some serial I/O devices (such as the Motorola 6850 ACIA used
+in many of the Apple serial interface boards) do not have a DTR pin, but
+use the RTS option instead.  That usually comes out to the RS232 DB-25
+connector, pin 4.
+
+	IMP now has an option has an option called "NODTR" at address
+011E.  If set to 00 ('NO') this assumes you do have DTR wired from the
+computer to the modem, with any selector switch on the modem set to
+"remote use".  When using ESC N in the terminal mode, or either DSC or
+BYE in the command mode, IMP DTR to disconnect the modem from the phone
+line.  This takes place almost immediately.
+
+	If you have a modem that does not support DTR (or are using a
+computer that does not have DTR or RTS either one), or you prefer not to
+connect the necessary wire from this purpose, you can say "YES" to that
+NODTR option.  This causes the IMP program to use the command:
+
+	   (1 second pause) +++ (1 second pause) ATH0
+
+to disconnect the modem.  This normally works just as well as dropping
+DTR other than it takes 3-4 seconds from the request until the line is
+disconnected.
+
+	   NOTE:  This only works for modems that
+		  use the Hayes 'AT' protocol.
+
+					- Irv Hoff
+					  Los Altos Hills, CA 94022
+					  (415) 948-2513 PRACSA RCPM
+					  (415) 948-2166 voice
+
+
